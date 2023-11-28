@@ -13,7 +13,11 @@
 % alternatively, look upon https://github.com/plk/biblatex/wiki/biblatex-and-the-arXiv and despair. 
 \input{preamble/minimalist_biblatex}
 
-\addbibresource{bibs/sensitivity}
+\addbibresource{bibs/applications.bib}
+\addbibresource{bibs/causal_abstractions.bib}
+\addbibresource{bibs/causal_interp.bib}
+\addbibresource{bibs/reviews.bib}
+\addbibresource{bibs/misc.bib}
 
 \crefformat{equation}{(#2#1#3)}
 \crefformat{figure}{Figure~#2#1#3}
@@ -73,66 +77,47 @@ spacebelow=\parsep,
 % frontmatter
 \usepackage[affil-it]{authblk}
 
-\title{Paper Template for Writing with Victor}
+\title{Redeeming the Localization Hypothesis}
 \date{}
-\author[1]{Albert Einstein}
-\author[1,2]{Pierre Laplace}
-\affil[1]{Physical Insitute of the Beyond}
-\affil[2]{Ouija Statistical Institute}
+\author{David Reber}
+\affil{Computer Science Department, University of Chicago}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Your abstract here
+  This project introduces an extension to causal scrubbing with the aim of validating the localization hypothesis in the context of Rank-One Model Editing (ROME) in language models. While previous research has critiqued the efficacy of causal tracing for localizing effective model editing points, this work shifts the focus towards enhancing causal scrubbing methods. By explicitly flipping the input instead of employing noise, the revised approach seeks to address the limitations of traditional causal scrubbing. Theoretical analysis and empirical testing are conducted to explore whether this modification can substantiate the localization hypothesis, offering a novel perspective in the field of mechanistic interpretability.
 \end{abstract}
+
+\section{Preface}
+I was approved to work on the causal scrubbing / ROME paper \cite{meng2022locating} for my final project directly by David McAllister. The paper has similarly accessibile resources as the other 6 assigned papers, including:
+
+\begin{itemize}
+    \item The original paper\footnote{\url{https://arxiv.org/pdf/2202.05262.pdf}} and supporting website\footnote{\url{https://rome.baulab.info/}}
+    \item Official Pytorch code: \footnote{\url{https://github.com/kmeng01/rome}} and Colab demos (causal tracing\footnote{\url{https://colab.research.google.com/github/kmeng01/rome/blob/main/notebooks/causal_trace.ipynb}}, model editing\footnote{\url{https://colab.research.google.com/github/kmeng01/rome/blob/main/notebooks/rome.ipynb}})
+\end{itemize}
+
+It's important to note that this project primarily applies to autoregressive models, and so won't use e.g. CIFAR-10. However, a suitable dataset for this project is available, with which GPT-2 XL can be run on Google Colab, making it accessible for interpretability research without extensive data or compute resources.
 
 \section{Introduction}
 
-This is a short document illustrating the hodgepodge of latex commands and style files that Victor uses to write papers.
-The main things are:
-\begin{enumerate}
-\item Use human-readable macros in latex math.
-  
-\begin{verbatim}
-Good: \EE[Y \given X]
-Bad: \mathbb{E}[Y | X]
-\end{verbatim}
-\item Use margin commenting commands (the included ones are due to Daniel M. Roy) to avoid breaking flow of the text w/ comments.
-\item Finished documents should be beautiful.
-\end{enumerate}
+In the seminal work by \citet{meng2022locating}, the authors employed \emph{causal tracing} to localize the storage and recall of factual associations in hidden-state activations of certain layers of GPT-2 XL, and then edited these facts via weights using \emph{Rank-One Model Editing} (ROME). However, \citet{hase2023does} contends that localization conclusions from causal tracing do not inform which model MLP layer is best to edit using ROME, challenging the \emph{localization hypothesis} and suggesting that increased mechanistic understanding does not necessarily facilitate effective model steering. 
 
-The most common option for commenting is margin commenting.\fTBD{vv: like this}
-It's also sometimes useful to highly text that \NA{needs attention}.
-Severe issues can be \PROBLEM{flagged as problems}.
+This project posits that the failure of causal tracing to localize the best ROME edits is not due to a failure of the localization hypothesis itself, but rather to the inadequacy of causal tracing in providing the promised mechanistic understanding. To support this claim, a theoretical analysis is conducted based on the formalism of \cite{reber2023whatsyourusecase}, demonstrating that causal tracing fails to execute sufficiently diverse interventions due to the limited support of noise over flipped base inputs. This theory is then empirically tested to examine if modifying causal scrubbing to explicitly flip the input, as opposed to using noise, is sufficient to rescue the localization hypothesis.
 
-\section{Further comments}
-When citing multiple references at once use only a single cite command \cite[e.g,][]{Richardson:Hudgens:Gilbert:Fine:2014, Liu:Kuramoto:Stuart:2013}.
-When using a citation as a noun, as in ``According to \citet{Rosenbaum:2010}, ...'', use \texttt{citet}.
+\section{Background and Related Work}
 
-In many venues, its common for proofs of theorems to appear only in an appendix. Using the restatable package makes this much easier. For example:
-\begin{restatable}{theorem}{mooncracker}
-\label{thm:mooncracker}
-Assume that the moon is made of cheese. Then, the moon is tasty with crackers, for all crackers that are non-stale.
-\end{restatable}
+\section{Project Proposal}
 
-The way I handle bibliographies is incompatible with natbib. Accordingly, when modifying this template to work with ML conference templates (e.g., NeurIPS or ICML), use their \texttt{nonatbib} option.
+\section{Methodology}
 
-\section{Writing Advice}
-We now transition from latex formatting to some free-form writing and style advice.
-My intention is to eventually significantly update this.
+\section{Data and Resources}
 
-Writing is \emph{extremely important}. The impact of your paper is limited by the ability of your audience to understand it. Your typical reader will be a non-expert with limited attention. Work hard to make your paper accessible and beautiful! For your first papers, the writing may take about as long as the actual research. Neglecting writing quality is the most common failure mode I see among new researchers. 
-\begin{enumerate}
-  \item A good first step for writing is to sketch the full paper in bullet points. Make sure the story is totally clear to you. Explain your paper to a couple of friends to nail down the flow. A partial template for bullet point writing: \url{https://docs.google.com/document/d/1KORmM9VsxY29ssod77e0zfKVlBLSesmauSYD5UyfDo4/edit?usp=sharing}
-  \item Some useful links:
-    \begin{enumerate}
-    \item Writing advice from Don Knuth: \url{https://jmlr.csail.mit.edu/reviewing-papers/knuth_mathematical_writing.pdf}. I strongly recommend at least reading the first 10 pages.
-    \item This tool for identifying overly complex or hard-to-understand sentences: \url{https://hemingwayapp.com/}
-    \item This transfomer-based rewriting tool: \url{https://www.wordtune.com/}
-    \end{enumerate}
-  \item Start writing early! Anticipate needing several full revisions of the paper. These often include large changes. For instance, throwing away entire sections, or adding new experiments. It's easy to miss deadlines, or to end up submitting subpar versions of your paper.   
-\end{enumerate}
+\section{Expected Outcomes and Evaluation}
+
+\section{Potential Challenges and Limitations}
+
+\section{Conclusion}
 
 
 %\newpage
@@ -145,12 +130,11 @@ Writing is \emph{extremely important}. The impact of your paper is limited by th
 % \date{\vspace{-5ex}}
 % \maketitle
 
-\section{Proofs}
-Recall that \cref{thm:mooncracker} is provided to illustrate the use of restatable.
-\mooncracker* 
-\begin{proof}
-  This is straightforward from well-known results of Wallace and Gromit. \PROBLEM{missing citation}
-\end{proof}
+% \section{Proofs}
+% Recall that \cref{thm:mooncracker} is provided to illustrate the use of restatable.
+% \mooncracker* 
+% \begin{proof}
+%   This is straightforward from well-known results of Wallace and Gromit. \PROBLEM{missing citation}
+% \end{proof}
 
 \end{document}
-
