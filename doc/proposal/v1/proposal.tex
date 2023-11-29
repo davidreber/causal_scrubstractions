@@ -77,7 +77,7 @@ spacebelow=\parsep,
 % frontmatter
 \usepackage[affil-it]{authblk}
 
-\title{Redeeming the Localization Hypothesis}
+\title{Extending Causal Tracing to (hopefully) Validate the Localization Hypothesis}
 \date{}
 \author{David Reber}
 \affil{Computer Science Department, University of Chicago}
@@ -85,40 +85,35 @@ spacebelow=\parsep,
 \begin{document}
 \maketitle
 
-\begin{abstract}
-  This project introduces an extension to causal scrubbing with the aim of validating the localization hypothesis in the context of Rank-One Model Editing (ROME) in language models. While previous research has critiqued the efficacy of causal tracing for localizing effective model editing points, this work shifts the focus towards enhancing causal scrubbing methods. By explicitly flipping the input instead of employing noise, the revised approach seeks to address the limitations of traditional causal scrubbing. Theoretical analysis and empirical testing are conducted to explore whether this modification can substantiate the localization hypothesis, offering a novel perspective in the field of mechanistic interpretability.
-\end{abstract}
+% \begin{abstract}
+%   This project introduces an extension to causal scrubbing with the aim of validating the localization hypothesis in the context of Rank-One Model Editing (ROME) in language models. While previous research has critiqued the efficacy of causal tracing for localizing effective model editing points, this work shifts the focus towards enhancing causal scrubbing methods. By explicitly flipping the input instead of employing noise, the revised approach seeks to address the limitations of traditional causal scrubbing. Theoretical analysis and empirical testing are conducted to explore whether this modification can substantiate the localization hypothesis, offering a novel perspective in the field of mechanistic interpretability.
+% \end{abstract}
 
-\section{Preface}
-I was approved to work on the causal scrubbing / ROME paper \cite{meng2022locating} for my final project directly by David McAllister. The paper has similarly accessibile resources as the other 6 assigned papers, including:
+% \section{Preface}
+% I was approved to work on the causal scrubbing / ROME paper \cite{meng2022locating} for my final project directly by David McAllister. The paper has similarly accessibile resources as the other 6 assigned papers, including:
 
-\begin{itemize}
-    \item The original paper\footnote{\url{https://arxiv.org/pdf/2202.05262.pdf}} and supporting website\footnote{\url{https://rome.baulab.info/}}
-    \item Official Pytorch code: \footnote{\url{https://github.com/kmeng01/rome}} and Colab demos (causal tracing\footnote{\url{https://colab.research.google.com/github/kmeng01/rome/blob/main/notebooks/causal_trace.ipynb}}, model editing\footnote{\url{https://colab.research.google.com/github/kmeng01/rome/blob/main/notebooks/rome.ipynb}})
-\end{itemize}
+% \begin{itemize}
+%     \item The original paper\footnote{\url{https://arxiv.org/pdf/2202.05262.pdf}} and supporting website\footnote{\url{https://rome.baulab.info/}}
+%     \item Official Pytorch code: \footnote{\url{https://github.com/kmeng01/rome}} and Colab demos (causal tracing\footnote{\url{https://colab.research.google.com/github/kmeng01/rome/blob/main/notebooks/causal_trace.ipynb}}, model editing\footnote{\url{https://colab.research.google.com/github/kmeng01/rome/blob/main/notebooks/rome.ipynb}})
+% \end{itemize}
 
-It's important to note that this project primarily applies to autoregressive models, and so won't use e.g. CIFAR-10. However, a suitable dataset for this project is available, with which GPT-2 XL can be run on Google Colab, making it accessible for interpretability research without extensive data or compute resources.
+% It's important to note that this project primarily applies to autoregressive models, and so won't use e.g. CIFAR-10. However, a suitable dataset for this project is available, with which GPT-2 XL can be run on Google Colab, making it accessible for interpretability research without extensive data or compute resources.
 
 \section{Introduction}
 
-In the seminal work by \citet{meng2022locating}, the authors employed \emph{causal tracing} to localize the storage and recall of factual associations in hidden-state activations of certain layers of GPT-2 XL, and then edited these facts via weights using \emph{Rank-One Model Editing} (ROME). However, \citet{hase2023does} contends that localization conclusions from causal tracing do not inform which model MLP layer is best to edit using ROME, challenging the \emph{localization hypothesis} and suggesting that increased mechanistic understanding does not necessarily facilitate effective model steering. 
+In ``Locating and Editing Factual Associations in GPT'' by \citet{meng2022locating}, the authors employed \emph{causal tracing} to localize the storage and recall of factual associations in hidden-state activations of certain layers of GPT-2 XL, and then edited these facts via the MLP weights using \emph{Rank-One Model Editing} (ROME). However, causal tracing recent came under scrutiny by ``Does Localization infrom Editing? Surprising Differences in Causality-based Localization vs. Knowledge Editing in Language Models'' \cite{hase2023does}, which contends that localization conclusions from causal tracing do not inform which model MLP layer is best to edit using ROME, challenging the \emph{localization hypothesis} and suggesting that increased mechanistic understanding does not necessarily facilitate effective model steering. 
 
-This project posits that the failure of causal tracing to localize the best ROME edits is not due to a failure of the localization hypothesis itself, but rather to the inadequacy of causal tracing in providing the promised mechanistic understanding. To support this claim, a theoretical analysis is conducted based on the formalism of \cite{reber2023whatsyourusecase}, demonstrating that causal tracing fails to execute sufficiently diverse interventions due to the limited support of noise over flipped base inputs. This theory is then empirically tested to examine if modifying causal scrubbing to explicitly flip the input, as opposed to using noise, is sufficient to rescue the localization hypothesis.
+\begin{definition} {\textbf{Localization Hypothesis}}
+  If a ROME edit at a single MLP at layer $i$ and token $j$ is sufficient to restore the uncorrupted label, then intervening on the post-MLP activations at layer $i$ and token $j$ should also flip the label.
+\end{definition}
 
-\section{Background and Related Work}
+\emph{Model steering} asks `how can we change the weights of the network to produce a desired behavior'? If true, the localization hypothesis indicates that we can intervene on activations first (even though these are inherently context-dependent), to narrow down (`localize') where we should perform interventions on the MLP weights.
 
 \section{Project Proposal}
 
-\section{Methodology}
+Based on my recent research\footnote{My prior research 1. formalizes the goal of mechantistic interpretability using the language of causality, 2. establishes a taxonomy for how various interpretability methods (including causal tracing) are only addressing portions of mechanistic interpretability, and 3. establishes partial evaluations for these respective methods. \textbf{Notably, my past work was only theoretical, so all of the empirical investigations of this project will be new contributions.}} into the challenge of obtaining a full mechanistic understanding \cite{reber2023whatsyourusecase}, I conjecture that the failure of causal tracing to localize the best ROME edits is not due to a failure of the localization hypothesis itself, but rather to the inadequacy of causal tracing in providing the promised mechanistic understanding. 
 
-\section{Data and Resources}
-
-\section{Expected Outcomes and Evaluation}
-
-\section{Potential Challenges and Limitations}
-
-\section{Conclusion}
-
+To support this claim, I will reimplement the evaluations of \cite{hase2023does} with a slight modification to causal tracing, which corrupts the inputs not with noise, but rather with another prompt specifically chosen to flip the label. This extension of causal tracing is inspired by the \emph{interchange interventions} of \cite{geiger2023finding,wu2023interpretability}.
 
 %\newpage
 \printbibliography
